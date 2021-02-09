@@ -1,0 +1,25 @@
+name: Publish to production
+
+on:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - run: npm ci
+      - run: npm run build --if-present
+      - name: Deploy production 🚀
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          ACCESS_TOKEN: ${{ secrets.DEPLOY_PROD }}
+          REPOSITORY_NAME: lb-01/jbendsen-spa-prod
+          BRANCH: master
+          FOLDER: build
+          CLEAN: true
